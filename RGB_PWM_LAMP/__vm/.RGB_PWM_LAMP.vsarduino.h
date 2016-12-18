@@ -21,6 +21,7 @@
 
 //
 //
+void serialEvent();
 
 #include "pins_arduino.h" 
 #include "arduino.h"

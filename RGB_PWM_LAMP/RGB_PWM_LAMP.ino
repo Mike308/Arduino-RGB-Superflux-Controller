@@ -13,7 +13,11 @@
 
 
 void HSVtoRGB(float h,float s,float v);
+void parse_string(String str);
+String receive_string = " ";
 
+
+bool check_if_string_is_complete;
 
 
 
@@ -25,6 +29,8 @@ void setup()
 	  pinMode(G,OUTPUT);
 	  pinMode(B,OUTPUT);
 	  Serial.begin(9600);
+	  receive_string.reserve(200);
+	  
 
 }
 
@@ -32,13 +38,30 @@ void loop()
 {
 
 	  /* add main program code here, this code starts again each time it ends */
-	HSVtoRGB(221,100,100);
+	  
+	  if(check_if_string_is_complete==true){
+		  
+		 // Serial.print(receive_string);
+		  parse_string(receive_string);
+		    	  
+		  receive_string = "";
+		  check_if_string_is_complete = false;
+		  
+		  
+		  
+		  
+	  }
+	  
+
+	  
+	  
+	  
 	  
 
 }
 
 
-/** MODIFIED FUNCTION FROM ws2812b (http://mikrocontroller.bplaced.net/wordpress/?page_id=3665)**/
+/** MODIFIED FUNCTION FROM ws2812b library (http://mikrocontroller.bplaced.net/wordpress/?page_id=3665)**/
 
 
 void HSVtoRGB(float h,float s,float v)
@@ -47,7 +70,6 @@ void HSVtoRGB(float h,float s,float v)
 	
 	byte red,green,blue;
 
-	
 	if(h>359) h=359;
 	if(s>100) s=100;
 	if(v>100) v=100;
@@ -93,11 +115,56 @@ void HSVtoRGB(float h,float s,float v)
 	analogWrite(R,red);
 	analogWrite(G,green);
 	analogWrite(B,blue);
-	Serial.print(red);
-	Serial.print(",");
-	Serial.print(green);
-	Serial.print(",");
-	Serial.println(blue);
+
+}
+
+
+void parse_string(String str){
+	
+	char buf[200];
+	str.toCharArray(buf,str.length());
+
+	
+	
+	char *id = strtok(buf,"^");
+	
+	Serial.println(atoi(id));
+	
+	if(atoi(id)==1){
+		
+		char * h = strtok(NULL,"^");
+		char * s = strtok(NULL,"^");
+		char * v = strtok(NULL,"^");
+		
+		float hF = atof(h);
+		float sF = atof(s);
+		float vF = atof(v);
+		
+		HSVtoRGB(hF,sF,vF);
+		
+	}
+	
+	
+	
+	
+}
+
+void serialEvent(){
+	
+	while(Serial.available()){
+		
+		char c = (char)(Serial.read());
+		receive_string += c;
+		
+		if(c == '\n'){
+			
+			check_if_string_is_complete = true;
+			
+		}
+		
+	}
+	
+	
 }
 
 
