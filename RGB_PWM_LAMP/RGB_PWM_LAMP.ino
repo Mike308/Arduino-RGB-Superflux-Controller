@@ -12,8 +12,9 @@
 
 
 
-void HSVtoRGB(float h,float s,float v);
-void parse_string(String str);
+void Set_HSV_Color(float h,float s,float v);
+void Set_RGB_Color(uint8_t r, uint8_t g, uint8_t b);
+void Command_Line(String str);
 String receive_string = " ";
 
 
@@ -42,7 +43,7 @@ void loop()
 	  if(check_if_string_is_complete==true){
 		  
 		 // Serial.print(receive_string);
-		  parse_string(receive_string);
+		  Command_Line(receive_string);
 		    	  
 		  receive_string = "";
 		  check_if_string_is_complete = false;
@@ -60,11 +61,21 @@ void loop()
 
 }
 
+void Set_RGB_Color(uint8_t r, uint8_t g, uint8_t b){
+	
+	
+	analogWrite(R,r);
+	analogWrite(G,g);
+	analogWrite(B,b);
+	
+	
+}
+
 
 /** MODIFIED FUNCTION FROM ws2812b library (http://mikrocontroller.bplaced.net/wordpress/?page_id=3665)**/
 
 
-void HSVtoRGB(float h,float s,float v)
+void Set_HSV_Color(float h,float s,float v)
 {
 	uint8_t diff;
 	
@@ -119,10 +130,13 @@ void HSVtoRGB(float h,float s,float v)
 }
 
 
-void parse_string(String str){
+void Command_Line(String str){
 	
 	char buf[200];
 	str.toCharArray(buf,str.length());
+	
+	
+	
 
 	
 	
@@ -130,19 +144,36 @@ void parse_string(String str){
 	
 	Serial.println(atoi(id));
 	
-	if(atoi(id)==1){
+	
+	
+	
+	
+		if(atoi(id)==1){
+		      char *h = strtok(NULL,"^");
+			  char *s = strtok(NULL,"^");
+			  char *v = strtok(NULL,"^");
+			 float	hF = atof(h);
+			 float	sF = atof(s);
+			 float	vF = atof(v);
+				Set_HSV_Color(hF,sF,vF);
+				
+				
+		}
 		
-		char * h = strtok(NULL,"^");
-		char * s = strtok(NULL,"^");
-		char * v = strtok(NULL,"^");
+		else if(atoi(id)==2){
 		
-		float hF = atof(h);
-		float sF = atof(s);
-		float vF = atof(v);
+		        char * r = strtok(NULL,"^");
+				char * g = strtok(NULL,"^");
+				char * b = strtok(NULL,"^");
+				uint8_t r_val = atoi(r);
+				uint8_t g_val = atoi(g);
+				uint8_t b_val = atoi(b);
+				Set_RGB_Color(r_val,g_val,b_val);
+			
+				
+		}
 		
-		HSVtoRGB(hF,sF,vF);
-		
-	}
+	
 	
 	
 	
