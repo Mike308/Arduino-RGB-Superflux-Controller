@@ -11,14 +11,28 @@
 #define B 3
 
 
+typedef struct {
+	
+	uint8_t mode;
+	unsigned long s;
+	
+} t_animation;
 
-void Set_HSV_Color(float h,float s,float v);
+void Set_HSV_Color(uint16_t h,uint16_t s,uint16_t v);
 void Set_RGB_Color(uint8_t r, uint8_t g, uint8_t b);
-void Command_Line(String str);
+void Command_Line(String str, t_animation * anim);
+void Animation_Circuit_of_Color(unsigned long speed);
+void Animation_Switching_Colors(unsigned long speed);
+void Animation_Array_of_Colors(unsigned long speed);
+
 String receive_string = " ";
-
-
 bool check_if_string_is_complete;
+unsigned long current_millis;
+unsigned long previous_millis;
+
+
+
+t_animation animation;
 
 
 
@@ -40,10 +54,14 @@ void loop()
 
 	  /* add main program code here, this code starts again each time it ends */
 	  
+	 current_millis = millis();
+	  
+	  Animation_Display_Mode(animation.mode,animation.s);
+	  
 	  if(check_if_string_is_complete==true){
 		  
 		 // Serial.print(receive_string);
-		  Command_Line(receive_string);
+		  Command_Line(receive_string,&animation);
 		    	  
 		  receive_string = "";
 		  check_if_string_is_complete = false;
@@ -75,7 +93,7 @@ void Set_RGB_Color(uint8_t r, uint8_t g, uint8_t b){
 /** MODIFIED FUNCTION FROM ws2812b library (http://mikrocontroller.bplaced.net/wordpress/?page_id=3665)**/
 
 
-void Set_HSV_Color(float h,float s,float v)
+void Set_HSV_Color(uint16_t h,uint16_t s,uint16_t v)
 {
 	uint8_t diff;
 	
@@ -130,7 +148,7 @@ void Set_HSV_Color(float h,float s,float v)
 }
 
 
-void Command_Line(String str){
+void Command_Line(String str, t_animation * anim){
 	
 	char buf[200];
 	str.toCharArray(buf,str.length());
@@ -149,13 +167,13 @@ void Command_Line(String str){
 	
 	
 		if(atoi(id)==1){
-		      char *h = strtok(NULL,"^");
-			  char *s = strtok(NULL,"^");
-			  char *v = strtok(NULL,"^");
-			 float	hF = atof(h);
-			 float	sF = atof(s);
-			 float	vF = atof(v);
-				Set_HSV_Color(hF,sF,vF);
+				  char *h = strtok(NULL,"^");
+				  char *s = strtok(NULL,"^");
+				  char *v = strtok(NULL,"^");
+				 float	hF = atof(h);
+				 float	sF = atof(s);
+				 float	vF = atof(v);
+				 Set_HSV_Color(hF,sF,vF);
 				
 				
 		}
@@ -169,8 +187,34 @@ void Command_Line(String str){
 				uint8_t g_val = atoi(g);
 				uint8_t b_val = atoi(b);
 				Set_RGB_Color(r_val,g_val,b_val);
+				anim->mode = 0;
+				
 			
 				
+		}
+		else if(atoi(id)==3){
+			
+				char *speed = strtok(NULL,"^");
+				unsigned long speed_val = atol(speed);
+				anim->mode = 3;
+				anim->s = speed_val;
+			
+		}
+		else if(atol(id)==4){
+			
+			char *speed = strtok(NULL,"^");
+			unsigned long speed_val = atol(speed);
+			anim->mode = 4;
+			anim->s = speed_val;
+			
+		}
+		else if(atoi(id)==5){
+			
+			char *speed = strtok(NULL,"^");
+			unsigned long speed_val = atol(speed);
+			anim->mode = 5;
+			anim->s = speed_val;
+			
 		}
 		
 	
@@ -179,6 +223,107 @@ void Command_Line(String str){
 	
 	
 }
+
+
+void Animation_Display_Mode(uint8_t mode,unsigned long speed){
+	
+	if(mode==3){
+		
+		Animation_Circuit_of_Color(speed);				
+		
+	}
+	else if(mode==4){
+		
+		Animation_Switching_Colors(speed);
+	}
+	else if(mode==5){
+		
+		Animation_Array_of_Colors(speed);
+		
+	}
+	
+}
+
+void Animation_Circuit_of_Color(unsigned long speed){
+	
+		static int hue = 0;
+		if(hue<360){
+			if(current_millis-previous_millis>=speed){
+			previous_millis = current_millis;
+			Set_HSV_Color(hue,100,100);
+			hue++;
+		
+		
+			}
+		}else{
+			
+			hue = 0;
+		}
+	
+}
+
+
+void Animation_Switching_Colors(unsigned long speed){
+	
+	
+	
+	if(current_millis-previous_millis>=speed){
+		
+		previous_millis = current_millis;
+		
+		int r = random(256);
+		int g = random(256);
+		int b = random(256);
+		Set_RGB_Color(r,g,b);
+		
+	}
+	
+	
+}
+
+void Animation_Array_of_Colors(unsigned long speed){
+	
+	static uint8_t i = 0;
+	
+	byte Colors [24][3] = {
+		{182,182,255}, {198,182,255}, {218,182,255}, {234,182,255}, {255,182,255},
+		{255,182,234}, {255,182,218}, {255,182,198}, {255,182,182}, {255,198,182},
+		{255,218,182}, {255,234,182}, {255,255,182}, {234,255,182}, {218,255,182},
+		{198,255,182}, {182,255,182}, {182,255,198}, {182,255,218}, {182,255,234},
+		{182,255,255}, {182,234,255}, {182,218,255}, {182,198,255}};
+		
+		if(current_millis-previous_millis>=speed){
+			
+			previous_millis = current_millis;
+			
+			if(i<24){
+				
+				byte r = Colors[i][0];
+				byte g = Colors[i][1];
+				byte b = Colors[i][2];
+				Set_RGB_Color(r,g,b);
+				i++;
+				Serial.print(r);
+				Serial.print(",");
+				Serial.print(g);
+				Serial.print(",");
+				Serial.println(b);
+				
+				
+				
+			}else{
+				
+				i = 0;
+			}
+			
+			
+		
+			
+		}
+		
+	
+}
+
 
 void serialEvent(){
 	

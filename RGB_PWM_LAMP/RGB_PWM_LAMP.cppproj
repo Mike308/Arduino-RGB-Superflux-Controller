@@ -129,8 +129,8 @@
     </ToolchainSettings>
     <VMSETTING_IncludePaths>E:/Program Files (x86)/Arduino/libraries;E:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Users/Mike/Documents/Arduino/libraries;E:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;E:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/eightanaloginputs;../../../RGB_PWM_LAMP;E:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;E:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;E:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;E:/Program Files (x86)/Atmel/Studio/7.0/Extensions/jjf5ye1q.kmx/Micro Platforms/default/debuggers;</VMSETTING_IncludePaths>
     <VisualMicroSettings>
-      <VisualMicroSettings xmlns="">
-        <arduino.upload.port>COM2</arduino.upload.port>
+      <VisualMicroSettings>
+        <arduino.upload.port>COM11</arduino.upload.port>
       </VisualMicroSettings>
     </VisualMicroSettings>
   </PropertyGroup>
@@ -222,8 +222,8 @@
     </ToolchainSettings>
     <VMSETTING_IncludePaths>E:/Program Files (x86)/Arduino/libraries;E:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Users/Mike/Documents/Arduino/libraries;E:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;E:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/eightanaloginputs;../../../RGB_PWM_LAMP;E:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;E:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;E:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;E:/Program Files (x86)/Atmel/Studio/7.0/Extensions/jjf5ye1q.kmx/Micro Platforms/default/debuggers;</VMSETTING_IncludePaths>
     <VisualMicroSettings>
-      <VisualMicroSettings xmlns="">
-        <arduino.upload.port>COM2</arduino.upload.port>
+      <VisualMicroSettings>
+        <arduino.upload.port>COM11</arduino.upload.port>
       </VisualMicroSettings>
     </VisualMicroSettings>
   </PropertyGroup>
