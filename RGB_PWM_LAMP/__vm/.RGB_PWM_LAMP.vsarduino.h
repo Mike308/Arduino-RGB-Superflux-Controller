@@ -21,7 +21,6 @@
 
 //
 //
-void Animation_Display_Mode(uint8_t mode,unsigned long speed);
 void serialEvent();
 
 #include "pins_arduino.h" 
